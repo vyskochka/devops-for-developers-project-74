@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    command: bash -c 'npm run dev'
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./app:/app"
+    depends_on:
+      - caddy
+
+  caddy:
+    image: caddy:2.7.6-alpine
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./services/caddy/Caddyfile:/etc/caddy/Caddyfile
+
+volumes:
+  caddy_data:
+  caddy_config:
